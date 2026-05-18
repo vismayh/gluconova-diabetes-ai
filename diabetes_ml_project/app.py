@@ -1,55 +1,27 @@
-from flask import Flask, request, render_template_string
-import joblib
-import numpy as np
-
-app = Flask(__name__)
-
-model = joblib.load("diabetes_ml_project/model/diabetes_model.pkl")
-
-HTML = """
-<h1>GlucoNova Diabetes Risk Intelligence</h1>
-
-<form method="POST">
-Pregnancies: <input name="preg"><br><br>
-Glucose: <input name="glucose"><br><br>
-Blood Pressure: <input name="bp"><br><br>
-Skin Thickness: <input name="skin"><br><br>
-Insulin: <input name="insulin"><br><br>
-BMI: <input name="bmi"><br><br>
-Diabetes Pedigree Function: <input name="dpf"><br><br>
-Age: <input name="age"><br><br>
-
-<input type="submit" value="Predict">
-</form>
-
-<h2>{{result}}</h2>
-"""
-
-@app.route("/", methods=["GET","POST"])
+@app.route("/")
 def home():
+    return render_template("index.html")
 
-    result=""
 
-    if request.method=="POST":
-        data=np.array([[
-            float(request.form["preg"]),
-            float(request.form["glucose"]),
-            float(request.form["bp"]),
-            float(request.form["skin"]),
-            float(request.form["insulin"]),
-            float(request.form["bmi"]),
-            float(request.form["dpf"]),
-            float(request.form["age"])
-        ]])
+@app.route("/predict", methods=["POST"])
+def predict():
 
-        prediction=model.predict(data)
+    values = [
+        float(request.form['pregnancies']),
+        float(request.form['glucose']),
+        float(request.form['bloodpressure']),
+        float(request.form['skinthickness']),
+        float(request.form['insulin']),
+        float(request.form['bmi']),
+        float(request.form['dpf']),
+        float(request.form['age'])
+    ]
 
-        if prediction[0]==1:
-            result="Diabetes likely"
-        else:
-            result="No diabetes detected"
+    prediction = model.predict([values])
 
-    return render_template_string(HTML,result=result)
+    result = "Diabetes Likely" if prediction[0]==1 else "No Diabetes Detected"
 
-if __name__=="__main__":
-    app.run(host="0.0.0.0",port=5000)
+    return render_template(
+        "index.html",
+        prediction_text=result
+    )
