@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>GlucoNova Diabetes Predictor</title>
+</head>
+
+<body>
+
+<h1>GlucoNova Diabetes Risk Predictor</h1>
+
+<form action="/predict" method="POST">
+
+<input type="number" name="pregnancies" placeholder="Pregnancies"><br><br>
+
+<input type="number" name="glucose" placeholder="Glucose"><br><br>
+
+<input type="number" name="bloodpressure" placeholder="Blood Pressure"><br><br>
+
+<input type="number" name="skinthickness" placeholder="Skin Thickness"><br><br>
+
+<input type="number" name="insulin" placeholder="Insulin"><br><br>
+
+<input type="number" name="bmi" placeholder="BMI"><br><br>
+
+<input type="number" name="dpf" placeholder="Diabetes Pedigree Function"><br><br>
+
+<input type="number" name="age" placeholder="Age"><br><br>
+
+<button type="submit">Predict</button>
+
+</form>
+
+<h2>{{ prediction_text }}</h2>
+
+</body>
+</html>
