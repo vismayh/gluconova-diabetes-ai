@@ -1,55 +1,29 @@
-from flask import Flask, request, render_template_string
-import joblib
-import numpy as np
+from flask import Flask, render_template, request
+import pickle
 
 app = Flask(__name__)
 
-model = joblib.load("diabetes_ml_project/model/diabetes_model.pkl")
+model = pickle.load(open("diabetes_model.pkl","rb"))
 
-HTML = """
-<h1>GlucoNova Diabetes Risk Intelligence</h1>
-
-<form method="POST">
-Pregnancies: <input name="preg"><br><br>
-Glucose: <input name="glucose"><br><br>
-Blood Pressure: <input name="bp"><br><br>
-Skin Thickness: <input name="skin"><br><br>
-Insulin: <input name="insulin"><br><br>
-BMI: <input name="bmi"><br><br>
-Diabetes Pedigree Function: <input name="dpf"><br><br>
-Age: <input name="age"><br><br>
-
-<input type="submit" value="Predict">
-</form>
-
-<h2>{{result}}</h2>
-"""
-
-@app.route("/", methods=["GET","POST"])
+@app.route("/")
 def home():
+    return render_template("index.html")
 
-    result=""
 
-    if request.method=="POST":
-        data=np.array([[
-            float(request.form["preg"]),
-            float(request.form["glucose"]),
-            float(request.form["bp"]),
-            float(request.form["skin"]),
-            float(request.form["insulin"]),
-            float(request.form["bmi"]),
-            float(request.form["dpf"]),
-            float(request.form["age"])
-        ]])
+@app.route("/predict", methods=["POST"])
+def predict():
 
-        prediction=model.predict(data)
+    prediction = model.predict([[1,148,72,35,0,33.6,0.627,50]])
 
-        if prediction[0]==1:
-            result="Diabetes likely"
-        else:
-            result="No diabetes detected"
+    if prediction[0]==1:
+        result="Diabetes Likely"
+    else:
+        result="No Diabetes"
 
-    return render_template_string(HTML,result=result)
+    return render_template(
+        "index.html",
+        prediction_text=result
+    )
 
 if __name__=="__main__":
     app.run(host="0.0.0.0",port=5000)
