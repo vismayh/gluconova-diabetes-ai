@@ -1,96 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GlucoNova | Diabetes Risk Intelligence</title>
-
-<link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c4a6e" />
+  <meta name="description" content="GlucoNova — modern AI diabetes risk screening. Live prediction tracking on mobile and desktop." />
+  <title>GlucoNova | Diabetes Risk Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css" />
 </head>
-
 <body>
+  <nav class="top-nav" aria-label="Main navigation">
+    <a href="#" class="brand">
+      <span class="brand-icon" aria-hidden="true">G</span>
+      <span class="brand-text">Gluco<em>Nova</em></span>
+    </a>
+    <span class="live-pill" id="nav-live-count" title="Total predictions run">
+      <span class="live-dot" aria-hidden="true"></span>
+      <span id="nav-predictions">0</span> checks
+    </span>
+    <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links" id="nav-links">
+      <a href="#home">Home</a>
+      <a href="#insights">Insights</a>
+      <a href="#predict">Check risk</a>
+    </div>
+  </nav>
 
-<div class="hero">
+  <header class="hero" id="home">
+    <div class="hero-bg" role="img" aria-label="Healthcare professional with patient"></div>
+    
+    
+    <div class="hero-inner">
+      <p class="hero-tag">GlucoNova · diabetes risk intelligence</p>
+      <h1>See your diabetes risk clearly, in seconds</h1>
+      <p class="hero-lead">A modern AI screening experience on any phone or laptop. Every prediction is counted live on our platform.</p>
+      <a href="#predict" class="btn-hero">Start health check</a>
+    </div>
+  </header>
 
-<nav>
-<h2>🩺 GlucoNova</h2>
+  <section class="stats-strip" aria-label="Model statistics">
+    <article class="stat-card">
+      <span class="stat-value" id="hero-accuracy">74%</span>
+      <span class="stat-label">Model accuracy</span>
+    </article>
+    <article class="stat-card stat-card--live">
+      <span class="stat-value" id="hero-predictions">0</span>
+      <span class="stat-label">Predictions completed</span>
+      <span class="stat-live-tag">Live counter</span>
+    </article>
+    <article class="stat-card">
+      <span class="stat-value">9</span>
+      <span class="stat-label">Health inputs</span>
+    </article>
+  </section>
 
-<ul>
-<li>Home</li>
-<li>Prediction</li>
-<li>About</li>
-</ul>
-</nav>
+  <section class="gallery" aria-label="Healthcare imagery">
+    <article class="gallery-card">
+      <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80" alt="Doctor consulting patient" loading="lazy" width="600" height="400" />
+      <div class="gallery-caption">
+        <h3>Clinical screening</h3>
+        <p>Evidence-based metrics used in diabetes research</p>
+      </div>
+    </article>
+    <article class="gallery-card">
+      <img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=600&q=80" alt="Blood glucose monitoring" loading="lazy" width="600" height="400" />
+      <div class="gallery-caption">
+        <h3>Glucose tracking</h3>
+        <p>Key biomarkers drive accurate risk estimates</p>
+      </div>
+    </article>
+    <article class="gallery-card">
+      <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=600&q=80" alt="Healthy lifestyle and wellness" loading="lazy" width="600" height="400" />
+      <div class="gallery-caption">
+        <h3>Preventive care</h3>
+        <p>Early awareness supports better outcomes</p>
+      </div>
+    </article>
+  </section>
 
+  <section class="viz-section" id="insights" aria-label="Data visualizations">
+    <div class="section-head">
+      <h2>Health insights</h2>
+      <p>Dataset overview and your personal risk breakdown after prediction.</p>
+    </div>
+    <article class="live-monitor card" aria-live="polite">
+      <div class="live-monitor-inner">
+        <span class="live-dot live-dot--lg" aria-hidden="true"></span>
+        <div>
+          <p class="live-monitor-label">Platform activity · monitored in real time</p>
+          <p class="live-monitor-value"><span id="monitor-predictions">0</span> <span>predictions run</span></p>
+        </div>
+      </div>
+      <p class="live-monitor-hint">Increases each time someone completes a risk check on GlucoNova.</p>
+    </article>
+    <div class="viz-grid">
+      <article class="card viz-card">
+        <h3>Training dataset mix</h3>
+        <p class="viz-hint">Outcome distribution in model training data</p>
+        <div class="chart-wrap">
+          <canvas id="dataset-chart" aria-label="Dataset outcome chart"></canvas>
+        </div>
+      </article>
+      <article class="card viz-card">
+        <h3>Key health factors</h3>
+        <p class="viz-hint">Relative importance in the model</p>
+        <div class="chart-wrap chart-wrap--tall">
+          <canvas id="features-chart" aria-label="Feature importance chart"></canvas>
+        </div>
+      </article>
+      <article class="card viz-card viz-card--result">
+        <h3>Your risk visualization</h3>
+        <p class="viz-hint">Appears after you run a prediction</p>
+        <div class="chart-wrap chart-wrap--donut">
+          <canvas id="risk-chart" aria-label="Your risk donut chart"></canvas>
+          <p class="chart-placeholder" id="chart-placeholder">Submit the form below to see your chart</p>
+        </div>
+      </article>
+    </div>
+  </section>
 
-<div class="container">
+  <main class="predict-section" id="predict">
+    <div class="section-head">
+      <h2>Patient risk checker</h2>
+      <p>Fill in all fields. Optimized for mobile browsers including Chrome.</p>
+    </div>
+    <div class="predict-grid">
+      <section class="card form-card">
+        <h3 class="card-label">Patient input</h3>
+        <form id="predict-form">
+          <div class="form-grid">
+            <div class="field field--full">
+              <label for="Gender">Gender</label>
+              <select id="Gender" name="Gender" required>
+                <option value="">Select gender</option>
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+                <option value="other">Other / prefer not to say</option>
+              </select>
+              <span class="hint">Pregnancies auto-set to 0 for male patients</span>
+            </div>
+            <div class="field" id="pregnancies-field">
+              <label for="Pregnancies">Pregnancies</label>
+              <input type="number" id="Pregnancies" min="0" step="1" inputmode="numeric" placeholder="e.g. 2" required />
+            </div>
+            <div class="field">
+              <label for="Glucose">Glucose (mg/dL)</label>
+              <input type="number" id="Glucose" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 120" required />
+            </div>
+            <div class="field">
+              <label for="BloodPressure">Blood pressure</label>
+              <input type="number" id="BloodPressure" min="0" step="0.1" inputmode="decimal" placeholder="mm Hg" required />
+            </div>
+            <div class="field">
+              <label for="SkinThickness">Skin thickness (mm)</label>
+              <input type="number" id="SkinThickness" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 20" required />
+            </div>
+            <div class="field">
+              <label for="Insulin">Insulin (uU/mL)</label>
+              <input type="number" id="Insulin" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 80" required />
+            </div>
+            <div class="field">
+              <label for="BMI">BMI</label>
+              <input type="number" id="BMI" min="0.1" step="0.01" inputmode="decimal" placeholder="e.g. 25.4" required />
+            </div>
+            <div class="field">
+              <label for="DiabetesPedigreeFunction">Diabetes pedigree</label>
+              <input type="number" id="DiabetesPedigreeFunction" min="0" step="0.001" inputmode="decimal" placeholder="e.g. 0.35" required />
+            </div>
+            <div class="field">
+              <label for="Age">Age (years)</label>
+              <input type="number" id="Age" min="0" step="1" inputmode="numeric" placeholder="e.g. 45" required />
+            </div>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn-primary" id="submit-btn">Predict risk</button>
+            <button type="button" class="btn-ghost" id="sample-btn">Sample data</button>
+            <button type="reset" class="btn-ghost">Clear</button>
+          </div>
+          <div class="error-msg" id="error-msg" role="alert"></div>
+          <div id="result-panel">
+            <div class="result-header">
+              <div class="result-icon low" id="result-icon">OK</div>
+              <div>
+                <div class="result-title" id="result-title">-</div>
+                <div class="result-sub" id="result-sub">-</div>
+              </div>
+            </div>
+            <div class="risk-bar-wrap">
+              <label><span>Risk score</span><span id="risk-pct">0%</span></label>
+              <div class="risk-bar"><div class="risk-fill" id="risk-fill"></div></div>
+            </div>
+            <div class="prob-grid">
+              <div class="prob-box safe">
+                <div class="val" id="prob-no">-</div>
+                <div class="lbl">No diabetes</div>
+              </div>
+              <div class="prob-box risk">
+                <div class="val" id="prob-yes">-</div>
+                <div class="lbl">Diabetes likely</div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </section>
+      <aside class="sidebar">
+        <div class="card side-card">
+          <span class="model-badge">GlucoNova engine</span>
+          <h3 class="card-label">Model details</h3>
+          <div class="stat-row stat-row--highlight"><span>Predictions run</span><span id="meta-predictions">0</span></div>
+          <div class="stat-row"><span>Test accuracy</span><span id="meta-accuracy">-</span></div>
+          <div class="stat-row"><span>Model dataset</span><span id="meta-rows">768</span></div>
+          <div class="stat-row"><span>Features</span><span>9</span></div>
+        </div>
+        <div class="card side-card tips-card">
+          <h3 class="card-label">Healthy habits</h3>
+          <ul class="tips-list">
+            <li>Stay active 30 min most days</li>
+            <li>Choose whole grains and vegetables</li>
+            <li>Monitor blood sugar if at risk</li>
+            <li>Get regular check-ups</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </main>
 
-<div class="left">
+  <footer class="site-footer">
+    <p class="footer-brand">GlucoNova</p>
+    <p>Educational demo only — not medical advice. Consult a doctor for diagnosis.</p>
+    <p class="footer-small">Works on mobile Safari, Chrome, and desktop browsers.</p>
+  </footer>
 
-<h1>Diabetes Risk Intelligence</h1>
-
-<p>
-Advanced AI powered diabetes risk prediction system.
-Enter patient health values and receive an instant prediction.
-</p>
-
-<div class="cards">
-
-<div class="card">
-<h2>74%</h2>
-<p>Model Accuracy</p>
-</div>
-
-<div class="card">
-<h2>24/7</h2>
-<p>AI Monitoring</p>
-</div>
-
-</div>
-
-</div>
-
-
-<div class="right">
-
-<form method="POST">
-
-<input type="number" name="Pregnancies" placeholder="Pregnancies" required>
-
-<input type="number" name="Glucose" placeholder="Glucose" required>
-
-<input type="number" name="BloodPressure" placeholder="Blood Pressure" required>
-
-<input type="number" name="SkinThickness" placeholder="Skin Thickness" required>
-
-<input type="number" name="Insulin" placeholder="Insulin" required>
-
-<input type="number" step="0.1" name="BMI" placeholder="BMI" required>
-
-<input type="number" step="0.001" name="DiabetesPedigreeFunction" placeholder="Diabetes Pedigree Function" required>
-
-<input type="number" name="Age" placeholder="Age" required>
-
-
-<button type="submit">
-Predict Risk
-</button>
-
-</form>
-
-<div class="result">
-
-{{result}}
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<script src="{{ url_for('static',filename='script.js') }}"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="/static/app.js"></script>
 </body>
 </html>
